@@ -1,9 +1,11 @@
+import UseEffectExample from "./components/UseEffectExample";
 import UseReducerExample from "./components/UseReducerExample"
 
 function App() {
   return (
     <>
-     <UseReducerExample/>
+      <UseEffectExample />
+      <UseReducerExample />
     </>
   )
 }
