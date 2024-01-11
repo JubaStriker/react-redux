@@ -1,13 +1,11 @@
-import { useState } from 'react'
+import UseReducerExample from "./components/UseReducerExample"
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-     
+     <UseReducerExample/>
     </>
   )
 }
 
-export default App
+export default App;
