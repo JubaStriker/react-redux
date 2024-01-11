@@ -28,7 +28,7 @@ const reducer = (currentState: typeof initialState, action: TAction) => {
 const UseReducerExample = () => {
   const [state, dispatch] = useReducer(reducer, initialState)
   return (
-    <div>
+    <div className="mx-auto">
       <h1>{state.count}</h1>
       <button className='btn mr-3' onClick={() => dispatch({ type: 'increment' })}>Increment</button>
       <button onClick={() => dispatch({ type: 'decrement' })}>Decrement</button>
