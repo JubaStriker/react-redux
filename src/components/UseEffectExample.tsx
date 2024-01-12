@@ -23,11 +23,11 @@ const UseEffectExample = () => {
         useEffect(() => {
             fetch('https://jsonplaceholder.typicode.com/todos/1', { signal })
                 .then(res => res.json())
-                .then(data => alert(data.title));
+                .then(data => { console.log(data) });
 
-            return () => {
-                controller.abort();
-            }
+            // return () => {
+            //     controller.abort();
+            // }
         }, [])
         return <h1>Todo</h1>
     };
