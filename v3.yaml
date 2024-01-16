@@ -1,0 +1,2244 @@
+openapi: 3.1.0
+x-stoplight:
+  id: fhy4w51f1npin
+info:
+  title: TransfiPayAPIs
+  version: '1.0'
+  summary: Transfi Pay APIs
+  description: ''
+servers:
+  - url: 'https://sandbox-api.transfi.com/v2'
+    description: Sandbox Server
+paths:
+  /supported-currencies:
+    get:
+      summary: Supported Currencies
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  total:
+                    type: integer
+                  pages:
+                    type: integer
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        currency:
+                          type: string
+                        minAmount:
+                          type: integer
+                        maxAmount:
+                          type: integer
+                        logoUrl:
+                          type: string
+                x-examples:
+                  Example 1:
+                    status: success
+                    total: 36
+                    pages: 8
+                    data:
+                      - currency: NOK
+                        minAmount: 35
+                        maxAmount: 7500
+                        logoUrl: 'https://example.com/nok_logo.png'
+                      - currency: DKK
+                        minAmount: 27
+                        maxAmount: 8500
+                        logoUrl: 'https://example.com/dkk_logo.png'
+                      - currency: ZAR
+                        minAmount: 100
+                        maxAmount: 30000
+                        logoUrl: 'https://example.com/zar_logo.png'
+                      - currency: AED
+                        minAmount: 30
+                        maxAmount: 12000
+                        logoUrl: 'https://example.com/aed_logo.png'
+                      - currency: PLN
+                        minAmount: 22
+                        maxAmount: 9500
+                        logoUrl: 'https://example.com/pln_logo.png'
+              examples:
+                Example 1:
+                  value:
+                    status: success
+                    total: 36
+                    pages: 8
+                    data:
+                      - currency: NOK
+                        minAmount: 35
+                        maxAmount: 7500
+                        logoUrl: 'https://example.com/nok_logo.png'
+                      - currency: DKK
+                        minAmount: 27
+                        maxAmount: 8500
+                        logoUrl: 'https://example.com/dkk_logo.png'
+                      - currency: ZAR
+                        minAmount: 100
+                        maxAmount: 30000
+                        logoUrl: 'https://example.com/zar_logo.png'
+                      - currency: AED
+                        minAmount: 30
+                        maxAmount: 12000
+                        logoUrl: 'https://example.com/aed_logo.png'
+                      - currency: PLN
+                        minAmount: 22
+                        maxAmount: 9500
+                        logoUrl: 'https://example.com/pln_logo.png'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                x-examples:
+                  Example 1:
+                    message: Request Params -  direction is invalid
+                    code: INVALID_ARGUMENTS
+              examples:
+                Example 1:
+                  value:
+                    message: Request Params -  direction is invalid
+                    code: INVALID_ARGUMENTS
+                Example 2:
+                  value:
+                    message: Request Params -  direction is empty
+                    code: MISSING_ARGUMENTS
+                Example 3:
+                  value:
+                    message: Request Params -  page cannot be less than 1
+                    code: INVALID_ARGUMENTS
+                Example 4:
+                  value:
+                    message: Request Params -  page is out of range
+                    code: INVALID_ARGUMENTS
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                x-examples:
+                  Example 1:
+                    message: Unable to identify the customer
+                    code: CUSTOMER_NOT_FOUND
+              examples:
+                Example 1:
+                  value:
+                    message: Unable to identify the customer
+                    code: CUSTOMER_NOT_FOUND
+      operationId: get-supported-currencies
+      x-stoplight:
+        id: mors2u55ru4g1
+      description: Get List of Supported Currencies
+      security:
+        - basicAuth: []
+      parameters:
+        - schema:
+            type: string
+            example: withdraw
+          in: query
+          name: direction
+          description: Payment Direction ie - withdraw or deposit
+          required: true
+        - schema:
+            type: string
+            example: '1'
+            minLength: 1
+            default: '1'
+          in: query
+          name: page
+          description: Current Page Number
+        - schema:
+            type: string
+            example: '5'
+            minLength: 1
+            default: '5'
+          in: query
+          name: limit
+          description: Limit records
+  /orders:
+    post:
+      summary: Orders
+      operationId: create-pay-order
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  orderId:
+                    type: string
+                  paymentUrl:
+                    type: string
+                  partnerContext:
+                    type: object
+                    properties:
+                      testfield1:
+                        type: string
+                      testfield2:
+                        type: string
+                  redirectUrl:
+                    type: string
+                x-examples:
+                  Example 1:
+                    orderId: OR-240105131206526
+                    paymentUrl: 'https://dev-pay-widget.transfi.com/trade/?token=U2FsdGVkX19bWDXypU8eQOimlRZUiUe2t2Ofdnqzi%2Fowgv4EJhBHDCiNamJ6U0cqEhQA52w4AZFKQhpevvx7uxicrchEUVD4U5m684mj8XEgcrHd42p5GJWLdSAEsWrGJ0UTRS%2Bvd0KNh8wp%2FD1L2SubmEunx4yXksPsBR1IHPvE2AarBskf7LQiWltcIxtCWQoMfuHnIs1jCZ7Qosl4Y0FxOpFTt%2FYNf1XARxhjSqe2kdfiHRWLLw5c53vttWtlSCkWe7zS%2Fdy4RFC9UbmwXA%3D%3D'
+                    partnerContext:
+                      testfield1: '1234'
+                      testfield2: '5678'
+                    redirectUrl: 'https://www.example.com'
+              examples:
+                Example 1:
+                  value:
+                    orderId: OR-240105131206526
+                    paymentUrl: 'https://dev-pay-widget.transfi.com/trade/?token=U2FsdGVkX19bWDXypU8eQOimlRZUiUe2t2Ofdnqzi%2Fowgv4EJhBHDCiNamJ6U0cqEhQA52w4AZFKQhpevvx7uxicrchEUVD4U5m684mj8XEgcrHd42p5GJWLdSAEsWrGJ0UTRS%2Bvd0KNh8wp%2FD1L2SubmEunx4yXksPsBR1IHPvE2AarBskf7LQiWltcIxtCWQoMfuHnIs1jCZ7Qosl4Y0FxOpFTt%2FYNf1XARxhjSqe2kdfiHRWLLw5c53vttWtlSCkWe7zS%2Fdy4RFC9UbmwXA%3D%3D'
+                    partnerContext:
+                      testfield1: '1234'
+                      testfield2: '5678'
+                    redirectUrl: 'https://www.example.com'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                x-examples:
+                  Example 1:
+                    message: 'Request Body - firstName,lastName,email,country,paymentCode,amount,currency are missing'
+                    code: MISSING_ARGUMENTS
+              examples:
+                Example 1:
+                  value:
+                    message: 'Request Body - firstName,lastName,email,country,paymentCode,amount,currency are missing'
+                    code: MISSING_ARGUMENTS
+                Example 2:
+                  value:
+                    message: Request Body- redirectUrl
+                    code: MISSING_ARGUMENTS
+                Example 3:
+                  value:
+                    message: Invalid Redirect Url
+                    code: INVALID_ARGUMENTS
+        '401':
+          description: Invalid initialization vector
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                      stack:
+                        type: string
+                x-examples:
+                  Example 1:
+                    status: false
+                    data:
+                      message: Invalid initialization vector
+                      stack: Unauthorized
+              examples:
+                Example 1:
+                  value:
+                    status: false
+                    data:
+                      message: Invalid initialization vector
+                      stack: Unauthorized
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                x-examples:
+                  Example 1:
+                    message: User KYC Pending
+                    code: RESTRICTED_ACCESS
+              examples:
+                Example 1:
+                  value:
+                    message: User KYC Pending
+                    code: RESTRICTED_ACCESS
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                x-examples:
+                  Example 1:
+                    message: Unable to identify the customer
+                    code: CUSTOMER_NOT_FOUND
+              examples:
+                Example 1:
+                  value:
+                    message: Unable to identify the customer
+                    code: CUSTOMER_NOT_FOUND
+      x-stoplight:
+        id: rexiivtnbfhjc
+      security:
+        - basicAuth: []
+      tags:
+        - Pay
+      requestBody:
+        $ref: '#/components/requestBodies/Create-Order-body'
+      description: Create New Pay Order
+    parameters: []
+  /exchange-rates:
+    parameters: []
+    get - copy:
+      summary: Exchange Rates
+      tags: null
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      depositCurrency:
+                        type: string
+                      withdrawCurrency:
+                        type: string
+                      depositAmount:
+                        type: string
+                      withDrawAmount:
+                        type: number
+                      exchangeRate:
+                        type: number
+                      fees:
+                        type: object
+                        properties:
+                          processingFee:
+                            type: number
+                          partnerFee:
+                            type: number
+                          totalFee:
+                            type: number
+                x-examples:
+                  Example 1:
+                    status: success
+                    data:
+                      depositCurrency: EUR
+                      withdrawCurrency: PHP
+                      depositAmount: '100'
+                      withDrawAmount: 5837.664
+                      exchangeRate: 60.809
+                      fees:
+                        processingFee: 212.832
+                        partnerFee: 30.404
+                        totalFee: 243.236
+              examples:
+                Example 1:
+                  value:
+                    status: success
+                    data:
+                      depositCurrency: EUR
+                      withdrawCurrency: PHP
+                      depositAmount: '100'
+                      withDrawAmount: 5837.664
+                      exchangeRate: 60.809
+                      fees:
+                        processingFee: 212.832
+                        partnerFee: 30.404
+                        totalFee: 243.236
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                x-examples:
+                  Example 1:
+                    message: Currency not supported
+                    code: INVALID_ARGUMENTS
+              examples:
+                Example 1:
+                  value:
+                    message: Currency not supported
+                    code: INVALID_ARGUMENTS
+                Example 2:
+                  value:
+                    message: 'Request body - depositCurrency, withdrawCurrency or depositAmount'
+                    code: MISSING_ARGUMENTS
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                x-examples:
+                  Example 1:
+                    message: Unable to identify the customer
+                    code: CUSTOMER_NOT_FOUND
+              examples:
+                Example 1:
+                  value:
+                    message: Unable to identify the customer
+                    code: CUSTOMER_NOT_FOUND
+      operationId: ''
+      description: Get the quotes
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: depositCurrency
+          description: Currency you will be paying in with
+        - schema:
+            type: string
+          in: query
+          name: withdrawCurrency
+          description: Currency you will be paying out with
+        - schema:
+            type: integer
+          in: query
+          name: depositAmount
+          description: Amount you will be paying with
+        - schema:
+            type: string
+          in: header
+      security:
+        - basicAuth: []
+    get - copy 3:
+      summary: Exchange Rates
+      tags: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      depositCurrency:
+                        type: string
+                      withdrawCurrency:
+                        type: string
+                      depositAmount:
+                        type: string
+                      withDrawAmount:
+                        type: number
+                      exchangeRate:
+                        type: number
+                      fees:
+                        type: object
+                        properties:
+                          processingFee:
+                            type: number
+                          partnerFee:
+                            type: number
+                          totalFee:
+                            type: number
+                x-examples:
+                  Example 1:
+                    status: success
+                    data:
+                      depositCurrency: EUR
+                      withdrawCurrency: PHP
+                      depositAmount: '100'
+                      withDrawAmount: 5837.664
+                      exchangeRate: 60.809
+                      fees:
+                        processingFee: 212.832
+                        partnerFee: 30.404
+                        totalFee: 243.236
+              examples:
+                Example 1:
+                  value:
+                    status: success
+                    data:
+                      depositCurrency: EUR
+                      withdrawCurrency: PHP
+                      depositAmount: '100'
+                      withDrawAmount: 5837.664
+                      exchangeRate: 60.809
+                      fees:
+                        processingFee: 212.832
+                        partnerFee: 30.404
+                        totalFee: 243.236
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                x-examples:
+                  Example 1:
+                    message: Currency not supported
+                    code: INVALID_ARGUMENTS
+              examples:
+                Example 1:
+                  value:
+                    message: Currency not supported
+                    code: INVALID_ARGUMENTS
+                Example 2:
+                  value:
+                    message: 'Request body - depositCurrency, withdrawCurrency or depositAmount'
+                    code: MISSING_ARGUMENTS
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                x-examples:
+                  Example 1:
+                    message: Unable to identify the customer
+                    code: CUSTOMER_NOT_FOUND
+              examples:
+                Example 1:
+                  value:
+                    message: Unable to identify the customer
+                    code: CUSTOMER_NOT_FOUND
+      operationId: ''
+      description: Get the quotes
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: depositCurrency
+          description: Currency you will be paying in with
+        - schema:
+            type: string
+          in: query
+          name: withdrawCurrency
+          description: Currency you will be paying out with
+        - schema:
+            type: integer
+          in: query
+          name: depositAmount
+          description: Amount you will be paying with
+        - schema:
+            type: string
+          in: header
+      security:
+        - basicAuth: []
+    get:
+      summary: Exchange Rates
+      tags:
+        - Pay
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      depositCurrency:
+                        type: string
+                      withdrawCurrency:
+                        type: string
+                      depositAmount:
+                        type: string
+                      withDrawAmount:
+                        type: number
+                      exchangeRate:
+                        type: number
+                      fees:
+                        type: object
+                        properties:
+                          processingFee:
+                            type: number
+                          partnerFee:
+                            type: number
+                          totalFee:
+                            type: number
+                x-examples:
+                  Example 1:
+                    status: success
+                    data:
+                      depositCurrency: EUR
+                      withdrawCurrency: PHP
+                      depositAmount: '100'
+                      withDrawAmount: 5837.664
+                      exchangeRate: 60.809
+                      fees:
+                        processingFee: 212.832
+                        partnerFee: 30.404
+                        totalFee: 243.236
+              examples:
+                Example 1:
+                  value:
+                    status: success
+                    data:
+                      depositCurrency: EUR
+                      withdrawCurrency: PHP
+                      depositAmount: '100'
+                      withDrawAmount: 5837.664
+                      exchangeRate: 60.809
+                      fees:
+                        processingFee: 212.832
+                        partnerFee: 30.404
+                        totalFee: 243.236
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                x-examples:
+                  Example 1:
+                    message: Currency not supported
+                    code: INVALID_ARGUMENTS
+              examples:
+                Example 1:
+                  value:
+                    message: Currency not supported
+                    code: INVALID_ARGUMENTS
+                Example 2:
+                  value:
+                    message: 'Request body - depositCurrency, withdrawCurrency or depositAmount'
+                    code: MISSING_ARGUMENTS
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                x-examples:
+                  Example 1:
+                    message: Unable to identify the customer
+                    code: CUSTOMER_NOT_FOUND
+              examples:
+                Example 1:
+                  value:
+                    message: Unable to identify the customer
+                    code: CUSTOMER_NOT_FOUND
+      operationId: get-exchange-rates
+      description: Get the quotes
+      x-stoplight:
+        id: 438109pztenf9
+      parameters:
+        - schema:
+            type: string
+            example: PHP
+          in: query
+          name: depositCurrency
+          description: Currency you will be paying in with
+          required: true
+        - schema:
+            type: string
+            example: USD
+          in: query
+          name: withdrawCurrency
+          description: Currency you will be paying out with
+          required: true
+        - schema:
+            type: integer
+            example: 99
+            minimum: 0
+            exclusiveMinimum: false
+          in: query
+          name: depositAmount
+          description: Amount you will be paying with
+          required: true
+      security:
+        - basicAuth: []
+    get - copy 2:
+      summary: Exchange Rates
+      tags: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      depositCurrency:
+                        type: string
+                      withdrawCurrency:
+                        type: string
+                      depositAmount:
+                        type: string
+                      withDrawAmount:
+                        type: number
+                      exchangeRate:
+                        type: number
+                      fees:
+                        type: object
+                        properties:
+                          processingFee:
+                            type: number
+                          partnerFee:
+                            type: number
+                          totalFee:
+                            type: number
+                x-examples:
+                  Example 1:
+                    status: success
+                    data:
+                      depositCurrency: EUR
+                      withdrawCurrency: PHP
+                      depositAmount: '100'
+                      withDrawAmount: 5837.664
+                      exchangeRate: 60.809
+                      fees:
+                        processingFee: 212.832
+                        partnerFee: 30.404
+                        totalFee: 243.236
+              examples:
+                Example 1:
+                  value:
+                    status: success
+                    data:
+                      depositCurrency: EUR
+                      withdrawCurrency: PHP
+                      depositAmount: '100'
+                      withDrawAmount: 5837.664
+                      exchangeRate: 60.809
+                      fees:
+                        processingFee: 212.832
+                        partnerFee: 30.404
+                        totalFee: 243.236
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                x-examples:
+                  Example 1:
+                    message: Currency not supported
+                    code: INVALID_ARGUMENTS
+              examples:
+                Example 1:
+                  value:
+                    message: Currency not supported
+                    code: INVALID_ARGUMENTS
+                Example 2:
+                  value:
+                    message: 'Request body - depositCurrency, withdrawCurrency or depositAmount'
+                    code: MISSING_ARGUMENTS
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                x-examples:
+                  Example 1:
+                    message: Unable to identify the customer
+                    code: CUSTOMER_NOT_FOUND
+              examples:
+                Example 1:
+                  value:
+                    message: Unable to identify the customer
+                    code: CUSTOMER_NOT_FOUND
+      operationId: ''
+      description: Get the quotes
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: depositCurrency
+          description: Currency you will be paying in with
+        - schema:
+            type: string
+          in: query
+          name: withdrawCurrency
+          description: Currency you will be paying out with
+        - schema:
+            type: integer
+          in: query
+          name: depositAmount
+          description: Amount you will be paying with
+        - schema:
+            type: string
+          in: header
+      security:
+        - basicAuth: []
+    get - copy 5:
+      summary: Exchange Rates
+      tags: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      depositCurrency:
+                        type: string
+                      withdrawCurrency:
+                        type: string
+                      depositAmount:
+                        type: string
+                      withDrawAmount:
+                        type: number
+                      exchangeRate:
+                        type: number
+                      fees:
+                        type: object
+                        properties:
+                          processingFee:
+                            type: number
+                          partnerFee:
+                            type: number
+                          totalFee:
+                            type: number
+                x-examples:
+                  Example 1:
+                    status: success
+                    data:
+                      depositCurrency: EUR
+                      withdrawCurrency: PHP
+                      depositAmount: '100'
+                      withDrawAmount: 5837.664
+                      exchangeRate: 60.809
+                      fees:
+                        processingFee: 212.832
+                        partnerFee: 30.404
+                        totalFee: 243.236
+              examples:
+                Example 1:
+                  value:
+                    status: success
+                    data:
+                      depositCurrency: EUR
+                      withdrawCurrency: PHP
+                      depositAmount: '100'
+                      withDrawAmount: 5837.664
+                      exchangeRate: 60.809
+                      fees:
+                        processingFee: 212.832
+                        partnerFee: 30.404
+                        totalFee: 243.236
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                x-examples:
+                  Example 1:
+                    message: Currency not supported
+                    code: INVALID_ARGUMENTS
+              examples:
+                Example 1:
+                  value:
+                    message: Currency not supported
+                    code: INVALID_ARGUMENTS
+                Example 2:
+                  value:
+                    message: 'Request body - depositCurrency, withdrawCurrency or depositAmount'
+                    code: MISSING_ARGUMENTS
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                x-examples:
+                  Example 1:
+                    message: Unable to identify the customer
+                    code: CUSTOMER_NOT_FOUND
+              examples:
+                Example 1:
+                  value:
+                    message: Unable to identify the customer
+                    code: CUSTOMER_NOT_FOUND
+      operationId: ''
+      description: Get the quotes
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: depositCurrency
+          description: Currency you will be paying in with
+        - schema:
+            type: string
+          in: query
+          name: withdrawCurrency
+          description: Currency you will be paying out with
+        - schema:
+            type: integer
+          in: query
+          name: depositAmount
+          description: Amount you will be paying with
+        - schema:
+            type: string
+          in: header
+      security:
+        - basicAuth: []
+    get - copy 4:
+      summary: Exchange Rates
+      tags: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      depositCurrency:
+                        type: string
+                      withdrawCurrency:
+                        type: string
+                      depositAmount:
+                        type: string
+                      withDrawAmount:
+                        type: number
+                      exchangeRate:
+                        type: number
+                      fees:
+                        type: object
+                        properties:
+                          processingFee:
+                            type: number
+                          partnerFee:
+                            type: number
+                          totalFee:
+                            type: number
+                x-examples:
+                  Example 1:
+                    status: success
+                    data:
+                      depositCurrency: EUR
+                      withdrawCurrency: PHP
+                      depositAmount: '100'
+                      withDrawAmount: 5837.664
+                      exchangeRate: 60.809
+                      fees:
+                        processingFee: 212.832
+                        partnerFee: 30.404
+                        totalFee: 243.236
+              examples:
+                Example 1:
+                  value:
+                    status: success
+                    data:
+                      depositCurrency: EUR
+                      withdrawCurrency: PHP
+                      depositAmount: '100'
+                      withDrawAmount: 5837.664
+                      exchangeRate: 60.809
+                      fees:
+                        processingFee: 212.832
+                        partnerFee: 30.404
+                        totalFee: 243.236
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                x-examples:
+                  Example 1:
+                    message: Currency not supported
+                    code: INVALID_ARGUMENTS
+              examples:
+                Example 1:
+                  value:
+                    message: Currency not supported
+                    code: INVALID_ARGUMENTS
+                Example 2:
+                  value:
+                    message: 'Request body - depositCurrency, withdrawCurrency or depositAmount'
+                    code: MISSING_ARGUMENTS
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                x-examples:
+                  Example 1:
+                    message: Unable to identify the customer
+                    code: CUSTOMER_NOT_FOUND
+              examples:
+                Example 1:
+                  value:
+                    message: Unable to identify the customer
+                    code: CUSTOMER_NOT_FOUND
+      operationId: ''
+      description: Get the quotes
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: depositCurrency
+          description: Currency you will be paying in with
+        - schema:
+            type: string
+          in: query
+          name: withdrawCurrency
+          description: Currency you will be paying out with
+        - schema:
+            type: integer
+          in: query
+          name: depositAmount
+          description: Amount you will be paying with
+        - schema:
+            type: string
+          in: header
+      security:
+        - basicAuth: []
+  /orders/payin:
+    post:
+      summary: Orders
+      operationId: create-payin-order
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  orderId:
+                    type: string
+                  paymentUrl:
+                    type: string
+                  partnerContext:
+                    type: object
+                    properties:
+                      testfield1:
+                        type: string
+                      testfield2:
+                        type: string
+                  redirectUrl:
+                    type: string
+                x-examples:
+                  Example 1:
+                    orderId: OR-240105131206526
+                    paymentUrl: 'https://dev-pay-widget.transfi.com/trade/?token=U2FsdGVkX19bWDXypU8eQOimlRZUiUe2t2Ofdnqzi%2Fowgv4EJhBHDCiNamJ6U0cqEhQA52w4AZFKQhpevvx7uxicrchEUVD4U5m684mj8XEgcrHd42p5GJWLdSAEsWrGJ0UTRS%2Bvd0KNh8wp%2FD1L2SubmEunx4yXksPsBR1IHPvE2AarBskf7LQiWltcIxtCWQoMfuHnIs1jCZ7Qosl4Y0FxOpFTt%2FYNf1XARxhjSqe2kdfiHRWLLw5c53vttWtlSCkWe7zS%2Fdy4RFC9UbmwXA%3D%3D'
+                    partnerContext:
+                      testfield1: '1234'
+                      testfield2: '5678'
+                    redirectUrl: 'https://www.example.com'
+              examples:
+                Example 1:
+                  value:
+                    orderId: OR-240105131206526
+                    paymentUrl: 'https://dev-pay-widget.transfi.com/trade/?token=U2FsdGVkX19bWDXypU8eQOimlRZUiUe2t2Ofdnqzi%2Fowgv4EJhBHDCiNamJ6U0cqEhQA52w4AZFKQhpevvx7uxicrchEUVD4U5m684mj8XEgcrHd42p5GJWLdSAEsWrGJ0UTRS%2Bvd0KNh8wp%2FD1L2SubmEunx4yXksPsBR1IHPvE2AarBskf7LQiWltcIxtCWQoMfuHnIs1jCZ7Qosl4Y0FxOpFTt%2FYNf1XARxhjSqe2kdfiHRWLLw5c53vttWtlSCkWe7zS%2Fdy4RFC9UbmwXA%3D%3D'
+                    partnerContext:
+                      testfield1: '1234'
+                      testfield2: '5678'
+                    redirectUrl: 'https://www.example.com'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                x-examples:
+                  Example 1:
+                    message: 'Request Body - firstName,lastName,email,country,paymentCode,amount,currency are missing'
+                    code: MISSING_ARGUMENTS
+              examples:
+                Example 1:
+                  value:
+                    message: 'Request Body - firstName,lastName,email,country,paymentCode,amount,currency are missing'
+                    code: MISSING_ARGUMENTS
+        '401':
+          description: Invalid initialization vector
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                      stack:
+                        type: string
+                x-examples:
+                  Example 1:
+                    status: false
+                    data:
+                      message: Invalid initialization vector
+                      stack: Unauthorized
+              examples:
+                Example 1:
+                  value:
+                    status: false
+                    data:
+                      message: Invalid initialization vector
+                      stack: Unauthorized
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                x-examples:
+                  Example 1:
+                    message: User KYC Pending
+                    code: RESTRICTED_ACCESS
+              examples:
+                Example 1:
+                  value:
+                    message: User KYC Pending
+                    code: RESTRICTED_ACCESS
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                x-examples:
+                  Example 1:
+                    message: Unable to identify the customer
+                    code: CUSTOMER_NOT_FOUND
+              examples:
+                Example 1:
+                  value:
+                    message: Unable to identify the customer
+                    code: CUSTOMER_NOT_FOUND
+      x-stoplight:
+        id: mn7ur0tbj4ti3
+      tags:
+        - Payin
+      description: Create New Payin Order
+      requestBody:
+        description: Payload passed in Create Payin Order POST Request
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                Example 1:
+                  firstName: John
+                  lastName: Doe
+                  email: johndoe@email.com
+                  country: EU
+                  amount: '100'
+                  currency: EUR
+                  paymentCode: sepa_bank
+                  purposeCode: sandbox_testing
+                  redirectUrl: 'https://www.transfi.com'
+                  partnerContext:
+                    testfield1: '1234'
+                    testfield2: '5678'
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                email:
+                  type: string
+                  description: '> Unique Field'
+                country:
+                  type: string
+                amount:
+                  type: string
+                currency:
+                  type: string
+                paymentCode:
+                  type: string
+                purposeCode:
+                  type: string
+                redirectUrl:
+                  type: string
+                partnerContext:
+                  type: object
+                  properties:
+                    testfield1:
+                      type: string
+                    testfield2:
+                      type: string
+              required:
+                - firstName
+                - lastName
+                - email
+                - country
+                - amount
+                - currency
+                - paymentCode
+                - purposeCode
+                - redirectUrl
+            examples:
+              Example 1:
+                value:
+                  firstName: John
+                  lastName: Doe
+                  email: johndoe@email.com
+                  country: EU
+                  amount: '100'
+                  currency: EUR
+                  paymentCode: sepa_bank
+                  purposeCode: sandbox_testing
+                  redirectUrl: 'https://www.transfi.com'
+                  partnerContext:
+                    testfield1: '1234'
+                    testfield2: '5678'
+  /orders/payout:
+    post:
+      summary: Orders
+      operationId: post-orders-payout
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  orderId:
+                    type: string
+                  paymentUrl:
+                    type: string
+                  partnerContext:
+                    type: object
+                    properties:
+                      testfield1:
+                        type: string
+                      testfield2:
+                        type: string
+                  redirectUrl:
+                    type: string
+                x-examples:
+                  Example 1:
+                    orderId: OR-240105131206526
+                    paymentUrl: 'https://dev-pay-widget.transfi.com/trade/?token=U2FsdGVkX19bWDXypU8eQOimlRZUiUe2t2Ofdnqzi%2Fowgv4EJhBHDCiNamJ6U0cqEhQA52w4AZFKQhpevvx7uxicrchEUVD4U5m684mj8XEgcrHd42p5GJWLdSAEsWrGJ0UTRS%2Bvd0KNh8wp%2FD1L2SubmEunx4yXksPsBR1IHPvE2AarBskf7LQiWltcIxtCWQoMfuHnIs1jCZ7Qosl4Y0FxOpFTt%2FYNf1XARxhjSqe2kdfiHRWLLw5c53vttWtlSCkWe7zS%2Fdy4RFC9UbmwXA%3D%3D'
+                    partnerContext:
+                      testfield1: '1234'
+                      testfield2: '5678'
+                    redirectUrl: 'https://www.example.com'
+              examples:
+                Example 1:
+                  value:
+                    orderId: OR-240105131206526
+                    paymentUrl: 'https://dev-pay-widget.transfi.com/trade/?token=U2FsdGVkX19bWDXypU8eQOimlRZUiUe2t2Ofdnqzi%2Fowgv4EJhBHDCiNamJ6U0cqEhQA52w4AZFKQhpevvx7uxicrchEUVD4U5m684mj8XEgcrHd42p5GJWLdSAEsWrGJ0UTRS%2Bvd0KNh8wp%2FD1L2SubmEunx4yXksPsBR1IHPvE2AarBskf7LQiWltcIxtCWQoMfuHnIs1jCZ7Qosl4Y0FxOpFTt%2FYNf1XARxhjSqe2kdfiHRWLLw5c53vttWtlSCkWe7zS%2Fdy4RFC9UbmwXA%3D%3D'
+                    partnerContext:
+                      testfield1: '1234'
+                      testfield2: '5678'
+                    redirectUrl: 'https://www.example.com'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                x-examples:
+                  Example 1:
+                    message: 'Request Body - firstName,lastName,email,country,paymentCode,amount,currency are missing'
+                    code: MISSING_ARGUMENTS
+              examples:
+                Example 1:
+                  value:
+                    message: 'Request Body - firstName,lastName,email,country,paymentCode,amount,currency are missing'
+                    code: MISSING_ARGUMENTS
+        '401':
+          description: Invalid initialization vector
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+              examples:
+                Example 1:
+                  value:
+                    status: false
+                    data:
+                      message: Invalid initialization vector
+                      stack: Unauthorized
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                x-examples:
+                  Example 1:
+                    message: User KYC Pending
+                    code: RESTRICTED_ACCESS
+              examples:
+                Example 1:
+                  value:
+                    message: User KYC Pending
+                    code: RESTRICTED_ACCESS
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                x-examples:
+                  Example 1:
+                    message: Unable to identify the customer
+                    code: CUSTOMER_NOT_FOUND
+              examples:
+                Example 1:
+                  value:
+                    message: Unable to identify the customer
+                    code: CUSTOMER_NOT_FOUND
+      x-stoplight:
+        id: fkjmkbdoba934
+      tags:
+        - Payout
+      description: Create New Payout Order
+      requestBody:
+        description: Payload passed in Create Payout Order POST Request
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                Example 1:
+                  firstName: James
+                  lastName: Doe
+                  email: jamesdoe@email.com
+                  country: ID
+                  currency: IDR
+                  paymentCode: gopay
+                  paymentAccountNumber: '123456780'
+                  type: someone_else
+                  dob: 01-01-2000
+                  regNo: '123456789'
+                  purposeCode: sandbox_testing
+                  redirectUrl: 'https://www.transfi.com'
+                  partnerContext:
+                    testfield1: '1234'
+                    testfield2: '5678'
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                email:
+                  type: string
+                  description: '> Unique Field'
+                country:
+                  type: string
+                currency:
+                  type: string
+                paymentCode:
+                  type: string
+                paymentAccountNumber:
+                  type: string
+                type:
+                  type: string
+                dob:
+                  type: string
+                regNo:
+                  type: string
+                purposeCode:
+                  type: string
+                redirectUrl:
+                  type: string
+                partnerContext:
+                  type: object
+                  properties:
+                    testfield1:
+                      type: string
+                    testfield2:
+                      type: string
+              required:
+                - firstName
+                - lastName
+                - email
+                - country
+                - currency
+                - paymentCode
+                - paymentAccountNumber
+                - type
+                - dob
+                - regNo
+                - purposeCode
+                - redirectUrl
+            examples:
+              Example 1:
+                value:
+                  firstName: James
+                  lastName: Doe
+                  email: jamesdoe@email.com
+                  country: ID
+                  currency: IDR
+                  paymentCode: gopay
+                  paymentAccountNumber: '123456780'
+                  type: someone_else
+                  dob: 01-01-2000
+                  regNo: '123456789'
+                  purposeCode: sandbox_testing
+                  redirectUrl: 'https://www.transfi.com'
+                  partnerContext:
+                    testfield1: '1234'
+                    testfield2: '5678'
+  /payment-methods:
+    get:
+      summary: Payment Methods
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  paymentMethods:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        logoUrl:
+                          type: string
+                        paymentCode:
+                          type: string
+                        minAmount:
+                          type: integer
+                        maxAmount:
+                          type: integer
+                        paymentType:
+                          type: string
+                  total:
+                    type: integer
+                  pages:
+                    type: integer
+                x-examples:
+                  Example 1:
+                    paymentMethods:
+                      - name: BPI
+                        logoUrl: 'https://transfiprdstorage.blob.core.windows.net/payment-method-logos/bank.png'
+                        paymentCode: bpi
+                        minAmount: 5
+                        maxAmount: 100000000
+                        paymentType: bank_transfer
+                      - name: omnipay eWallet
+                        paymentCode: omnipay
+                        minAmount: 100
+                        maxAmount: 5000
+                        paymentType: local_wallet
+                      - name: GCash
+                        logoUrl: 'https://transfiprdstorage.blob.core.windows.net/payment-method-logos/gcash.png'
+                        paymentCode: gcash
+                        minAmount: 5
+                        maxAmount: 100000000
+                        paymentType: local_wallet
+                    total: 128
+                    pages: 43
+              examples:
+                Example 1:
+                  value:
+                    paymentMethods:
+                      - name: BPI
+                        logoUrl: 'https://transfiprdstorage.blob.core.windows.net/payment-method-logos/bank.png'
+                        paymentCode: bpi
+                        minAmount: 5
+                        maxAmount: 100000000
+                        paymentType: bank_transfer
+                      - name: omnipay eWallet
+                        paymentCode: omnipay
+                        minAmount: 100
+                        maxAmount: 5000
+                        paymentType: local_wallet
+                      - name: GCash
+                        logoUrl: 'https://transfiprdstorage.blob.core.windows.net/payment-method-logos/gcash.png'
+                        paymentCode: gcash
+                        minAmount: 5
+                        maxAmount: 100000000
+                        paymentType: local_wallet
+                    total: 128
+                    pages: 43
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                x-examples:
+                  Example 1:
+                    message: Request Params - currency or direction
+                    code: MISSING_ARGUMENTS
+              examples:
+                Example 1:
+                  value:
+                    message: Request Params - currency or direction
+                    code: MISSING_ARGUMENTS
+                Example 2:
+                  value:
+                    message: Request Params - page
+                    code: INVALID_ARGUMENTS
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                x-examples:
+                  Example 1:
+                    message: Unable to identify the customer
+                    code: CUSTOMER_NOT_FOUND
+              examples:
+                Example 1:
+                  value:
+                    message: Unable to identify the customer
+                    code: CUSTOMER_NOT_FOUND
+      operationId: get-payment-methods
+      x-stoplight:
+        id: auz6qjkao26wq
+      description: Get Payment Methods
+      parameters:
+        - schema:
+            type: string
+            example: PHP
+          in: query
+          name: currency
+          description: Currency of the payment
+          required: true
+        - schema:
+            type: number
+            default: 5
+            example: 1
+            exclusiveMinimum: false
+          in: query
+          name: limit
+          description: Limit of records per page
+          allowEmptyValue: true
+        - schema:
+            type: number
+            default: 1
+            example: 1
+            minimum: 1
+          in: query
+          name: page
+          description: Display page number
+        - schema:
+            type: string
+            example: withdraw
+          in: query
+          name: direction
+          description: Direction of the payment ie - deposit or withdraw
+          required: true
+        - schema:
+            type: string
+            default: svg
+            example: svg
+          in: query
+          name: logoFormat
+          description: Format of the logo ie- svg or png
+      security:
+        - basicAuth: []
+  '/orders/{orderId}':
+    get:
+      summary: Order Details
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      orderId:
+                        type: string
+                      type:
+                        type: string
+                      depositCurrency:
+                        type: string
+                      depositAmount:
+                        type: integer
+                      withdrawCurrency:
+                        type: string
+                      withdrawAmount:
+                        type: number
+                      fees:
+                        type: object
+                        properties:
+                          processingFee:
+                            type: integer
+                          partnerFee:
+                            type: integer
+                      status:
+                        type: string
+                      senderName:
+                        type: object
+                        properties:
+                          firstName:
+                            type: string
+                          lastName:
+                            type: string
+                      recipientName:
+                        type: object
+                        properties:
+                          firstName:
+                            type: string
+                          lastName:
+                            type: string
+                x-examples:
+                  Example 1:
+                    status: success
+                    data:
+                      orderId: OR-240105172954182
+                      type: pay
+                      depositCurrency: USD
+                      depositAmount: 101
+                      withdrawCurrency: IDR
+                      withdrawAmount: 1567196.699
+                      fees:
+                        processingFee: 0
+                        partnerFee: 0
+                      status: initiated
+                      senderName:
+                        firstName: senderFirstName
+                        lastName: senderLastName
+                      recipientName:
+                        firstName: recipintFirstName
+                        lastName: recipientLastName
+              examples:
+                Example 1:
+                  value:
+                    status: success
+                    data:
+                      orderId: OR-240105172954182
+                      type: pay
+                      depositCurrency: USD
+                      depositAmount: 101
+                      withdrawCurrency: IDR
+                      withdrawAmount: 1567196.699
+                      fees:
+                        processingFee: 0
+                        partnerFee: 0
+                      status: initiated
+                      senderName:
+                        firstName: senderFirstName
+                        lastName: senderLastName
+                      recipientName:
+                        firstName: recipintFirstName
+                        lastName: recipientLastName
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                x-examples:
+                  Example 1:
+                    message: Order not found
+                    code: INVALID_ARGUMENTS
+              examples:
+                Example 1:
+                  value:
+                    message: Order not found
+                    code: INVALID_ARGUMENTS
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                x-examples:
+                  Example 1:
+                    message: Unable to identify the customer
+                    code: CUSTOMER_NOT_FOUND
+              examples:
+                Example 1:
+                  value:
+                    message: Unable to identify the customer
+                    code: CUSTOMER_NOT_FOUND
+      operationId: get-orders
+      x-stoplight:
+        id: 7m68m6j8ouryt
+      security:
+        - basicAuth: []
+      description: Get Order Details
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: orderId
+    parameters:
+      - schema:
+          type: string
+          example: OR-240105172954182
+        name: orderId
+        in: path
+        required: true
+        description: Order Id of the Order
+        style: label
+  '/recipient/{email}':
+    parameters:
+      - schema:
+          type: string
+          example: johndoe@email.com
+        name: email
+        in: path
+        required: true
+        description: Email of the Sender
+    get:
+      summary: Recipient Details
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        recipientId:
+                          type: string
+                        orgId:
+                          type: string
+                        type:
+                          type: string
+                        firstName:
+                          type: string
+                        lastName:
+                          type: string
+                        recipientEmail:
+                          type: string
+                        senderEmail:
+                          type: string
+                        purposeCode:
+                          type: string
+                        country:
+                          type: string
+                        currency:
+                          type: string
+                        paymentCode:
+                          type: string
+                        paymentAccountNumber:
+                          type: string
+                        regNo:
+                          type: string
+                        dob:
+                          type: string
+                        createdAt:
+                          type: string
+                        updatedAt:
+                          type: string
+                  pages:
+                    type: integer
+                  count:
+                    type: integer
+                x-examples:
+                  Example 1:
+                    data:
+                      - recipientId: RE-240105180046965
+                        orgId: OG-220923101501946
+                        type: legal_entity
+                        firstName: recipintFirstName
+                        lastName: recipientLastName
+                        recipientEmail: jamesdoe@email.com
+                        senderEmail: johndoe@email.com
+                        purposeCode: testing
+                        country: USA
+                        currency: IDR
+                        paymentCode: thai_qr
+                        paymentAccountNumber: test_account_no3
+                        regNo: testReg1001
+                        dob: '2000-01-01T00:00:00.000Z'
+                        createdAt: '2024-01-05T12:30:46.369Z'
+                        updatedAt: '2024-01-05T12:30:46.369Z'
+                      - recipientId: RE-240105180036414
+                        orgId: OG-220923101501946
+                        type: legal_entity
+                        firstName: recipintFirstName
+                        lastName: recipientLastName
+                        recipientEmail: jasondoe@email.com
+                        senderEmail: johndoe@email.com
+                        purposeCode: testing
+                        country: USA
+                        currency: IDR
+                        paymentCode: thai_qr
+                        paymentAccountNumber: test_account_no3
+                        regNo: testReg1001
+                        dob: '2000-01-01T00:00:00.000Z'
+                        createdAt: '2024-01-05T12:30:36.539Z'
+                        updatedAt: '2024-01-05T12:30:36.539Z'
+                      - recipientId: RE-240105180024261
+                        orgId: OG-220923101501946
+                        type: legal_entity
+                        firstName: recipintFirstName
+                        lastName: recipientLastName
+                        recipientEmail: janedoe@email.com
+                        senderEmail: johndoe@email.com
+                        purposeCode: testing
+                        country: USA
+                        currency: IDR
+                        paymentCode: thai_qr
+                        paymentAccountNumber: test_account_no3
+                        regNo: testReg1001
+                        dob: '2000-01-01T00:00:00.000Z'
+                        createdAt: '2024-01-05T12:30:24.384Z'
+                        updatedAt: '2024-01-05T12:30:24.384Z'
+                    pages: 1
+                    count: 3
+              examples:
+                Example 1:
+                  value:
+                    data:
+                      - recipientId: RE-240105180046965
+                        orgId: OG-220923101501946
+                        type: legal_entity
+                        firstName: recipintFirstName
+                        lastName: recipientLastName
+                        recipientEmail: jamesdoe@email.com
+                        senderEmail: johndoe@email.com
+                        purposeCode: testing
+                        country: USA
+                        currency: IDR
+                        paymentCode: thai_qr
+                        paymentAccountNumber: test_account_no3
+                        regNo: testReg1001
+                        dob: '2000-01-01T00:00:00.000Z'
+                        createdAt: '2024-01-05T12:30:46.369Z'
+                        updatedAt: '2024-01-05T12:30:46.369Z'
+                      - recipientId: RE-240105180036414
+                        orgId: OG-220923101501946
+                        type: legal_entity
+                        firstName: recipintFirstName
+                        lastName: recipientLastName
+                        recipientEmail: jasondoe@email.com
+                        senderEmail: johndoe@email.com
+                        purposeCode: testing
+                        country: USA
+                        currency: IDR
+                        paymentCode: thai_qr
+                        paymentAccountNumber: test_account_no3
+                        regNo: testReg1001
+                        dob: '2000-01-01T00:00:00.000Z'
+                        createdAt: '2024-01-05T12:30:36.539Z'
+                        updatedAt: '2024-01-05T12:30:36.539Z'
+                      - recipientId: RE-240105180024261
+                        orgId: OG-220923101501946
+                        type: legal_entity
+                        firstName: recipintFirstName
+                        lastName: recipientLastName
+                        recipientEmail: janedoe@email.com
+                        senderEmail: johndoe@email.com
+                        purposeCode: testing
+                        country: USA
+                        currency: IDR
+                        paymentCode: thai_qr
+                        paymentAccountNumber: test_account_no3
+                        regNo: testReg1001
+                        dob: '2000-01-01T00:00:00.000Z'
+                        createdAt: '2024-01-05T12:30:24.384Z'
+                        updatedAt: '2024-01-05T12:30:24.384Z'
+                    pages: 1
+                    count: 3
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                x-examples:
+                  Example 1:
+                    message: Request Params - recipientId
+                    code: INVALID_ARGUMENTS
+              examples:
+                Example 1:
+                  value:
+                    message: Request Params - page
+                    code: INVALID_ARGUMENTS
+                Example 2: {}
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                x-examples:
+                  Example 1:
+                    message: Unable to identify the customer
+                    code: CUSTOMER_NOT_FOUND
+              examples:
+                Example 1:
+                  value:
+                    message: Unable to identify the customer
+                    code: CUSTOMER_NOT_FOUND
+      operationId: get-recipient-recipientId
+      x-stoplight:
+        id: 41stg5rcmayj6
+      description: Get the Recipient's Details
+      security:
+        - basicAuth: []
+      parameters:
+        - schema:
+            type: string
+            default: '1'
+            example: '1'
+            minLength: 1
+          in: query
+          name: page
+          description: Display Page Number
+        - schema:
+            type: string
+            default: '5'
+            example: '5'
+            minLength: 1
+          in: query
+          name: limit
+          description: Limit of records per page
+components:
+  schemas: {}
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: ''
+  requestBodies:
+    Create-Order-body:
+      content:
+        application/json:
+          schema:
+            type: object
+            x-examples:
+              Example 1:
+                sender:
+                  firstName: senderFirstName
+                  lastName: senderLastName
+                  email: test1@email.com
+                  country: PH
+                  amount: '99'
+                  currency: USD
+                  paymentCode: thai_qr
+                recipient:
+                  firstName: recipintFirstName
+                  lastName: recipientLastName
+                  email: test1@email.com
+                  country: USA
+                  currency: PHP
+                  paymentCode: thai_qr
+                  paymentAccountNumber: test_account_no
+                  type: legalEntity
+                  dob: 01-01-2000
+                  regNo: testReg1001
+                purposeCode: testing
+                partnerContext:
+                  testfield1: '1234'
+                  testfield2: '5678'
+            properties:
+              sender:
+                type: object
+                description: Sender's Details
+                required:
+                  - firstName
+                  - lastName
+                  - email
+                  - country
+                  - amount
+                  - currency
+                  - paymentCode
+                properties:
+                  firstName:
+                    type: string
+                    description: Sender's First Name
+                  lastName:
+                    type: string
+                    description: Sender's Last Name
+                  email:
+                    type: string
+                    description: "Sender's Email\r\n> Unique Field"
+                  country:
+                    type: string
+                    description: "Sender's Country of Residence\r\n**Example: PH**"
+                  amount:
+                    type: string
+                    description: Sender's Order Value
+                  currency:
+                    type: string
+                    description: "Sender's Cuurency of Payment\r\n**Example: PHP**"
+                  paymentCode:
+                    type: string
+                    description: "Name of the Payment Method\r\n**Example: thai_qr**"
+              recipient:
+                type: object
+                description: Recipient's Details
+                required:
+                  - firstName
+                  - lastName
+                  - email
+                  - country
+                  - currency
+                  - paymentCode
+                  - paymentAccountNumber
+                  - type
+                  - dob
+                  - regNo
+                properties:
+                  firstName:
+                    type: string
+                    description: Recipient's First Name
+                  lastName:
+                    type: string
+                    description: Recipient's Last Name
+                  email:
+                    type: string
+                    description: "Recipient's Email Address\r\n> Unique Field"
+                  country:
+                    type: string
+                    description: "Recipient's Country of Residence\r\n**Example: USA**"
+                  currency:
+                    type: string
+                    description: "Recipient's Currency of recieving Payments\r\n**Example: USD**"
+                  paymentCode:
+                    type: string
+                    description: "Name of the Payment Method\r\n**Example: thai_qr**"
+                  paymentAccountNumber:
+                    type: string
+                    description: Recipient's Payment Account Number
+                  type:
+                    type: string
+                    description: "Recipient's Type of Payment\r\n**Accepted Values: myself, someone_else, organization or legal_entity**"
+                  dob:
+                    type: string
+                    description: "Recipient's Date of Birth\r\n**Format: dd-mm-yyy**"
+                  regNo:
+                    type: string
+                    description: "Registration Number \r\n*in case of Organization*"
+              purposeCode:
+                type: string
+                description: Purpose of the Payment
+              partnerContext:
+                type: object
+                description: Additional Information given by the sender
+                properties:
+                  testfield1:
+                    type: string
+                  testfield2:
+                    type: string
+              redirectUrl:
+                type: string
+                x-stoplight:
+                  id: ax09s5z9ppqnz
+                description: Url to be Redirected to
+            required:
+              - sender
+              - recipient
+              - purposeCode
+              - redirectUrl
+          examples:
+            Example 1:
+              value:
+                sender:
+                  firstName: John
+                  lastName: Doe
+                  email: johndoe@email.com
+                  country: EU
+                  amount: '100'
+                  currency: EUR
+                  paymentCode: sepa_bank
+                recipient:
+                  firstName: James
+                  lastName: Doe
+                  email: jamesdoe@email.com
+                  country: ID
+                  currency: IDR
+                  paymentCode: gopay
+                  paymentAccountNumber: '123456780'
+                  type: someone_else
+                  dob: 01-01-2000
+                  regNo: '123456789'
+                purposeCode: sandbox_testing
+                redirectUrl: 'https://www.transfi.com'
+                partnerContext:
+                  testfield1: '1234'
+                  testfield2: '5678'
+      description: Payload passed in Create Pay Order POST Request
+security:
+  - basicAuth: []
+x-internal: false
