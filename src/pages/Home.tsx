@@ -1,8 +1,9 @@
-
 const Home = () => {
     return (
         <div>
-            Home
+            <div className="flex justify-center items-center h-screen">
+                <button className="btn">Modal</button>
+            </div>
         </div>
     );
 };
