@@ -12,7 +12,7 @@ const Home = () => {
             <div className="flex justify-center items-center h-screen">
                 <button onClick={() => setModal((prev) => !prev)} className="btn">Modal</button>
                 <Modal isOpen={modal} onClose={handleModalClose}>
-                    <h1>This is a modal</h1>
+                    <h4>Modal Container</h4>
                 </Modal>
             </div>
         </div>
