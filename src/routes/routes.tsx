@@ -3,6 +3,7 @@ import App from '../App';
 import Home from '../pages/Home';
 import About from '../pages/About';
 import FormPage from '../pages/Form';
+import Animation from '../pages/Animation';
 
 const router = createBrowserRouter([
     {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
                 element: <FormPage />
             }
         ]
+    },
+    {
+        path: '/animation',
+        element: <Animation />,
     }
 ]);
 
