@@ -1,0 +1,74 @@
+---
+sidebar_position: 3
+---
+
+# 2️⃣ Webhook Events
+
+This section provides a list of possible events that can be received as
+webhooks.
+
+To have the real-time updates between TransFi and Customers, we are configuring
+the webhook events to be sent to Customers on below events.
+
+
+| Events        | Event Type     | Status                                                    | Descriptions |
+| :------------ | :------------- | :-------------------------------------------------------- | :----------- |
+| User Signup | User | `user_created` | User has created the account in TransFi   |
+| KYC Started | User | `kyc_initiated` | User has initiated the KYC process in TransFi to submit the Selfie, liveliness check and uploaded the respective ID Documents, i.e. Government ID, Driving License or Passport |
+| KYC Success | User | `kyc_success` | Uploaded details are successfully verified and approved on our KYC Partner and Compliance |
+| KYC Failed | User | `kyc_rejected` | Uploaded details are not approved on our KYC Partner and Compliance |
+| Payment Initiated | Order | `initiated` | Post confirming the order details, wallet address, and payment method selection, the user will be redirecting to the payment checkout page |
+| Payment Authorised | Order | `fund_settled` | User has submitted the payment details on the payment checkout page and the confirmation is received from the bank|
+| Payment Unauthorised | Order | `fund_failed` | User has submitted the payment details on the payment checkout page and the payment is declined from the bank|
+| Completed | Order | `asset_settled` | User has received the crypto |
+
+#### Sample Event For User:
+```js
+{
+    "eventId": "EV-231107XXXXX4387",
+    "entityId": "UX-231107XXXXX1115",
+    "entityType": "user",
+    "status": "user_created",
+    "user": {
+        "userId": "UX-231107XXXXX1115",
+        "firstName": "Nandhirajan",
+        "lastName": "Pandiraj",
+        "country": "EU",
+        "createdAt": "2023-11-08T00:00:00.004+04:00"
+    },
+    "order": {},
+    "partnerContext": "TESTNZZ6WFX"
+}
+```
+
+#### Sample Event For Order:
+```js
+{
+    "eventId": "EV-231110XXXXX1885",
+    "entityId": "OR-23110XXXXX15255",
+    "entityType": "order",
+    "status": "asset_settled",
+    "user": {
+        "userId": "UX-231107XXXXX1115",
+        "firstName": "Nandhirajan",
+        "lastName": "Pandiraj",
+        "country": "EU",
+        "createdAt": "2023-11-08T00:00:00.004+04:00"
+    },
+    "order": {
+        "orderId": "OR-23110XXXXX15255",
+        "type": "buy",
+        "fiatTicker": "EUR",
+        "cryptoTicker": "BTC",
+        "cryptoNetwork": "",
+        "fiatAmount": 33,
+        "cryptoAmount": 0.000994,
+        "paymentType": "sepa_instant",
+        "txnHash": "8c765c47XXXXXXXd1",
+        "walletAddress": "bc1q0szfzXXXXXqslz2yas293s",
+        "dynamicWalletAddress": "txbc1q0szfzXXXXXqslz2yas293s", // Applicable only for sell order.type "sell"
+        "createdAt": "2023-11-07T22:34:16.111+04:00"
+    },
+    "partnerContext": "TESTNZZ6WFX"
+}
+```

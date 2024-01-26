@@ -1,0 +1,80 @@
+---
+sidebar_position: 4
+---
+
+# 4️⃣ Webhook Signature
+
+All webhooks sent from TransFi are signed with a dedicated secret that is known
+only by TransFi and Customers. This ensures the integrity of the data contained
+in the webhook.
+
+:::info Note
+
+Please connect with our tech support team to know your webhook dedicated secret
+key.
+
+:::
+
+We are using HMAC or Hashed Message Authentication Code, as an authentication
+method with two keys.
+
+- First key is the `HTTP Request Body`,
+- Second is the `Dedicated Secret key`.
+
+### How does Webhook Signature works:
+
+Use the following code snippet to generate the hash using
+`dedicated secret key + body` and compare it with the signature has received
+from `X-Transfi-Hmac-Hash`.
+
+If the generated hash from Customer matched with the value received from
+`X-Transfi-Hmac-Hash`, then the message is `valid` one. If it is not matched,
+then the message is the `invalid` one. Customer can `skip` these events.
+
+### Code Snippet - Node.js:
+
+```js
+const crypto = require('crypto');
+const dedicatedSecret = <DEDICATED_SECRET>;
+const body = req.body;
+const signature = req.headers['X-Transfi-Hmac-Hash'];
+const hash = crypto.createHmac('sha256', dedicatedSecret).update(JSON.stringify(body)).digest('hex');
+return hash === signature;
+```
+
+### Code Snippet - Java :
+
+```java
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
+public class VerifyHmacSha256 { public static void main(String[] args) throws
+NoSuchAlgorithmException, InvalidKeyException { String webhookSecret =
+<DEDICATED_SECRET> // Assign with your secret key String receivedHash =
+req.headers['X-Transfi-Hmac-Hash']; String receivedMessage = <STRINGIFIED_BODY>
+// Stringified body
+
+        Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
+        SecretKeySpec secret_key = new SecretKeySpec(webhookSecret.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
+        sha256_HMAC.init(secret_key);
+
+        byte[] calculatedHash = sha256_HMAC.doFinal(receivedMessage.getBytes(StandardCharsets.UTF_8));
+
+        // Convert the calculated hash to a hexadecimal string
+        StringBuilder hexCalculatedHash = new StringBuilder();
+        for (byte b : calculatedHash) {
+            hexCalculatedHash.append(String.format("%02x", b));
+        }
+
+        if (hexCalculatedHash.toString().equals(receivedHash)) {
+            System.out.println("Hashes match, message is authentic.");
+        } else {
+            System.out.println("Hashes do not match, message may be tampered.");
+        }
+    }
+
+}
+```

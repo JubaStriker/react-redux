@@ -1,0 +1,18 @@
+---
+sidebar_position: 2
+---
+
+# 1️⃣ Webhook Schema
+
+This section describes the structure of the webhooks that you will receive.
+
+All webhooks events are sent as JSON. Each webhook event has 5 fields on the
+Request Body.
+
+| Field        | Type     | Value                                                         |
+| :----------- | :------- | :------------------------------------------------------------ |
+| `entityType` | `String` | `order`.                                                      |
+| `entityId`   | `String` | Order Id value.                                               |
+| `status`     | `String` | Status for entityType order is `asset_settled` `asset_failed` |
+| `user`       | `Object` | All user details at the time of triggering the event.         |
+| `order`      | `Object` | All order details at the time of triggering the event.        |
