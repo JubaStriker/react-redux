@@ -6,10 +6,10 @@ const parent = {
     visible: { opacity: 1, scale: 1 }
 }
 
-const child = {
-    hidden: { opacity: 0, scale: 0.9 },
-    visible: { opacity: 1, scale: 1 }
-}
+// const child = {
+//     hidden: { opacity: 0, scale: 0.9 },
+//     visible: { opacity: 1, scale: 1 }
+// }
 const Animation = () => {
     return (
         <div>
@@ -18,9 +18,12 @@ const Animation = () => {
                 variants={parent}
                 initial="hidden"
                 animate="visible"
-                transition={{ ease: 'easeInOut', duration: 1.5, staggerChildren: 0.5, delayChildren: 0.5 }}
+                transition={{ ease: 'easeInOut', duration: 0.25, staggerChildren: 0.5, delayChildren: 0.5 }}
+                // whileHover={{ scale: 1.1 }}
+                // whileTap={{ scale: 1 }}
+                drag
             >
-                <motion.div
+                {/* <motion.div
                     variants={child}
                     className='bg-sky-300 rounded-lg size-20' ></motion.div>
                 <motion.div
@@ -31,7 +34,7 @@ const Animation = () => {
                     className='bg-sky-300 rounded-lg size-20' ></motion.div>
                 <motion.div
                     variants={child}
-                    className='bg-sky-300 rounded-lg size-20' ></motion.div>
+                    className='bg-sky-300 rounded-lg size-20' ></motion.div> */}
 
             </motion.div>
         </div>
