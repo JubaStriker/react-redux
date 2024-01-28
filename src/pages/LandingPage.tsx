@@ -1,11 +1,10 @@
-import { Button } from '@/components/ui/button';
-import React from 'react';
+import Container from '@/components/layout/Container';
 
 const LandingPage = () => {
     return (
-        <div className='mt-24'>
-            <Button>Something</Button>
-        </div>
+        <Container>
+            <h1>This is home</h1>
+        </Container>
     );
 };
 
