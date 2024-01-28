@@ -4,6 +4,7 @@ import Home from '../pages/Home';
 import About from '../pages/About';
 import FormPage from '../pages/Form';
 import Animation from '../pages/Animation';
+import LandingPage from '@/pages/LandingPage';
 
 const router = createBrowserRouter([
     {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
             {
                 path: '/form',
                 element: <FormPage />
+            },
+            {
+                path: '/landing',
+                element: <LandingPage />
             }
         ]
     },
